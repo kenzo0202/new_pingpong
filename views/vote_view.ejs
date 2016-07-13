@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+
+    <link rel="stylesheet" href="/stylesheets/main.css" />
+    <!-- Scripts -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.scrollex.min.js"></script>
+    <script src="/js/jquery.scrolly.min.js"></script>
+    <script src="/js/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+    <!--[if lte IE 8]><script src="/js/ie/respond.min.js"></script><![endif]-->
+    <script src="/js/main.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <style>
+        .button{
+            width:200px;
+            height: 200px;
+            padding:0px !important;
+            text-align: center;
+            margin: 30px;
+        }
+        .button_box{
+            width:600px;
+            height: 600px;
+            margin: 0 auto !important;
+        }
+    </style>
+
+
+</head>
+<body>
+
+<!-- Page Wrapper -->
+<div id="page-wrapper">
+
+    <!-- Header -->
+    <header id="header">
+        <h1><a href="index.html">Spectral</a></h1>
+        <nav id="nav">
+            <ul>
+                <li class="special">
+                    <a href="#menu" class="menuToggle"><span>Menu</span></a>
+                    <div id="menu">
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="generic.html">Generic</a></li>
+                            <li><a href="elements.html">Elements</a></li>
+                            <li><a href="#">Sign Up</a></li>
+                            <li><a href="#">Log In</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main -->
+    <article id="main">
+        <!--
+        <header>
+            <h2>Elements</h2>
+            <p>Aliquam ut ex ut interdum donec amet imperdiet eleifend</p>
+        </header>
+        -->
+        <section class="wrapper style5">
+            <div class="inner">
+                <section>
+                    <h4>質問記入欄</h4>
+                    <input type="button" class="button" value="問題を表示する" id="button_add">
+                    
+                    <form method="get" action="/vote_view" id="ans_feild">
+                    <ul id="logs"></ul>
+                        <div class="row uniform button_box" id="add_button">
+                
+                            <!--<input type="button" class="button" value="1" id="option1">
+                            <input type="button" class="button" value="2" id="option2">
+                            <input type="button" class="button" value="3" id="option3">
+                            <input type="button" class="button" value="4" id="option4">-->
+                        
+                        </div>
+                    </form>
+                </section>
+                <div id="add_button"></div>
+            </div>
+        </section>
+        <div id="messageView"></div>
+    </article>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    $(function() {
+        var socket = io('http://192.168.33.10:3000', {'transports': ['websocket', 'polling']});
+            $('.button').click(function(){
+                socket.emit('vote', {vote_option: $(this).val()});
+                console.log($(this).val());
+                $('.button').remove();
+                $('.button_box').html('結果をお待ち下さい');
+                return false;
+            });
+            
+            $("#button_add").click(function () {
+            socket.on('emit_from_server', function(data) {
+                         $('#logs').append($('<li>').text(data.qs));
+                         //$('#add_button').append($('<div>').text(data.op1));
+            });
+     
+            // socket.on('emit_from_server',function(data){
+            //     console.log(data.qs);
+            //     $('#logs').append($('<li>').text(data.qs));
+                // var i = 4;
+                // $("#button_add").click(function () {
+                //     i++;
+                //     function addbuton() {
+                //         $('.button_box').append('<input type="button" class="button" value='+v+'>');
+                //         var parent_object = document.getElementById("add_button");
+                //         parent_object.appendChild(div_element);
+                //     }
+                // });
+        });
+    });
+
+</script>
+</body>
+</html>
